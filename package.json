@@ -28,7 +28,9 @@
    },
    "scripts": {
       "watch": "tsc -w",
-      "dev": "nodemon build/index.js",
+      "docker:up": "docker compose -f 'docker/docker-compose.yml' up -d --build ",
+      "docker:up-if-not-running": "docker compose -f 'docker/docker-compose.yml' ps | grep 'Up' || npm run docker:up",
+      "dev": "npm run docker:up-if-not-running && nodemon build/index.js",
       "start:dev": "concurrently \"tsc -w\" \"nodemon build/index.js\"",
       "build": "tsc",
       "start": "ts-node src/index.ts",
