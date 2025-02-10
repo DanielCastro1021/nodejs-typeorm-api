@@ -21,9 +21,19 @@ export class MovieController {
             });
         }
     }
+
     static async createMovie(req: Request, res: Response) {
-        const { title, description, director, year, rating, image, cast } =
-            req.body;
+        const { title, description, director, year, rating, image, cast } = req.body;
+
+        const movieRepository = AppDataSource.getRepository(Movie);
+        const existingMovie = await movieRepository.findOne({
+            where: { title }
+        });
+
+        if (existingMovie) {
+            return res.status(409).json({ message: "Movie already exists" });
+        }
+
         const movie = new Movie();
         movie.title = title;
         movie.description = description;
@@ -32,11 +42,9 @@ export class MovieController {
         movie.rating = rating;
         movie.image = image;
         movie.cast = cast;
-        const movieRepository = AppDataSource.getRepository(Movie);
+
         await movieRepository.save(movie);
-        return res
-            .status(200)
-            .json({ message: "Movie created successfully", movie });
+        return res.status(201).json({ message: "Movie created successfully", movie });
     }
 
     static async updateMovie(req: Request, res: Response) {
