@@ -2,7 +2,7 @@
 import { Request, Response } from "express";
 import { AppDataSource } from "../data-source";
 import { User } from "../entity/User.entity";
-import { encrypt } from "../helpers/encrypt";
+import { Encrypt } from "../helpers/encrypt";
 
 export class AuthController {
     static async login(req: Request, res: Response) {
@@ -17,11 +17,11 @@ export class AuthController {
             const userRepository = AppDataSource.getRepository(User);
             const user = await userRepository.findOne({ where: { email } });
 
-            const isPasswordValid = encrypt.comparepassword(user.password, password);
+            const isPasswordValid = Encrypt.comparePassword(user.password, password);
             if (!user || !isPasswordValid) {
                 return res.status(404).json({ message: "User not found" });
             }
-            const token = encrypt.generateToken({ id: user.id });
+            const token = Encrypt.generateToken({ id: user.id });
 
             return res.status(200).json({ message: "Login successful", user, token });
         } catch (error) {

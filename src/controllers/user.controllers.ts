@@ -1,13 +1,13 @@
 import { Request, Response } from "express";
 import { AppDataSource } from "../data-source";
 import { User } from "../entity/User.entity";
-import { encrypt } from "../helpers/encrypt";
+import { Encrypt } from "../helpers/encrypt";
 import * as cache from "memory-cache";
 
 export class UserController {
     static async signup(req: Request, res: Response) {
         const { name, email, password, role } = req.body;
-        const encryptedPassword = await encrypt.encryptpass(password);
+        const encryptedPassword = await Encrypt.encryptPass(password);
         const user = new User();
         user.name = name;
         user.email = email;
@@ -17,13 +17,13 @@ export class UserController {
         const userRepository = AppDataSource.getRepository(User);
         await userRepository.save(user);
 
-        // userRepository.create({ Name, email, password });
-        const token = encrypt.generateToken({ id: user.id });
+        const token = Encrypt.generateToken({ id: user.id });
 
         return res
             .status(200)
             .json({ message: "User created successfully", token, user });
     }
+
     static async getUsers(req: Request, res: Response) {
         const data = cache.get("data");
         if (data) {
@@ -42,6 +42,7 @@ export class UserController {
             });
         }
     }
+
     static async updateUser(req: Request, res: Response) {
         const { id } = req.params;
         const { name, email } = req.body;
