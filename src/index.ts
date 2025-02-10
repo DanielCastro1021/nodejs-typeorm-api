@@ -3,8 +3,7 @@ import * as express from "express";
 import * as dotenv from "dotenv";
 import { AppDataSource } from "./data-source";
 import { Request, Response } from "express";
-import { userRouter } from "./routes/user.routes";
-import { movieRouter } from "./routes/movie.routes";
+import { routes } from "./routes/routes";
 import { errorHandler } from "./middleware/errorHandler";
 
 dotenv.config();
@@ -12,10 +11,10 @@ dotenv.config();
 const { PORT = 3000 } = process.env;
 const app = express();
 
+
 app.use(express.json());
 app.use(errorHandler);
-app.use("/api/v1/users", userRouter);
-app.use("/api/v1/movies", movieRouter);
+app.use("/api/v1/", routes);
 app.get("/", (req: Request, res: Response) => res.status(505).json({ message: "Bad Request" }));
 
 

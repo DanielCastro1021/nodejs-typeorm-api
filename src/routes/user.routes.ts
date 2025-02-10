@@ -6,7 +6,7 @@ import { AuthController } from "../controllers/auth.controller";
 const Router = express.Router();
 
 Router.get(
-    "/users",
+    "/",
     authentification,
     authorization(["admin"]),
     UserController.getUsers

@@ -5,17 +5,17 @@ import { authorization } from "../middleware/authorization";
 
 const Router = express.Router();
 
-Router.get("/movies", authentification, MovieController.getAllMovies);
-Router.post("/movies", authentification, MovieController.createMovie);
+Router.get("/", authentification, MovieController.getAllMovies);
+Router.post("/", authentification, MovieController.createMovie);
 
 Router.put(
-    "/movies/:id",
+    "/:id",
     authentification,
     authorization(["admin"]),
     MovieController.updateMovie
 );
 Router.delete(
-    "/movies/:id",
+    "/:id",
     authentification,
     authorization(["admin"]),
     MovieController.deleteMovie
